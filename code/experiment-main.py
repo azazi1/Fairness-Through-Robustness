@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# ## Entry point; use this to run experiments
+# Entry point; use this to run experiments
 
 # In[1]:
 
@@ -22,7 +19,7 @@ import time
 import operator
 import itertools
 import numpy as np
-sys.path.insert(0, "../util")
+#sys.path.insert(0, "util")
 
 
 # In[2]:
@@ -38,7 +35,7 @@ from adversarial import *
 
 # In[3]:
 
-
+PHASES = ['train', 'test']
 ## Load other helper functions and classes
 # get_ipython().run_line_magic('run', 'pytorch_data_loader.ipynb # pytorch data loader class;')
 # get_ipython().run_line_magic('run', 'helper.ipynb # helper functions like')
@@ -138,7 +135,7 @@ for model_name in get_model_names(dataset_name):
 # In[10]:
 
 
-models_to_copies
+#models_to_copies
 
 
 # ### Checks if model weights already exist on disk, if not, it trains the model; else loads the weights
@@ -153,7 +150,7 @@ models_to_copies
 #         if not os.path.exists('../{}/model_weights/{}_epoch_best_lr_{}.pth'.format(ds_obj.name, 
 #                                                                                    model.model_name,
 #                                                                                    learning_rate)):    
-#             train_acc_history, train_loss_history, train_accuracy_s0, train_accuracy_s1,                 val_acc_history, val_loss_history, val_accuracy_s0, val_accuracy_s1,                    test_acc_history, test_loss_history, test_accuracy_s0, test_accuracy_s1=                         train_model(model, num_epochs, device, data_loaders)
+#             train_acc_history, train_loss_history, train_accuracy_s0, train_accuracy_s1,                 val_acc_history, val_loss_history, val_accuracy_s0, val_accuracy_s1,                    test_acc_history, test_loss_history, test_accuracy_s0, test_accuracy_s1=                         train_model(model, num_epochs, device, ds_obj.name, data_loaders)
 #             persist_model_weights(model, ds_obj, learning_rate, 'best', root_dir='.')
 #         else:
 #             with torch.no_grad():
@@ -327,7 +324,7 @@ for model_name in get_model_names(dataset_name):
                         [1 if ds_obj.test_labels[int(img_id)] == i else 0 for img_id in adv_image_ids]))
             else:
                 sensitive_attrs_names = [ds_obj.get_sens_attr_name()] # this needs to be implemented in ds_obj
-                sensitive_attrs = [np.array([ds_obj.get_image_protected_class(self, 'test', int(img_id))                                            for img_id in adv_image_ids])]
+                sensitive_attrs = [np.array([ds_obj.get_image_protected_class('test', int(img_id)) for img_id in adv_image_ids])]
             
             for sensitive_attr_name, sensitive_attr in zip(sensitive_attrs_names, sensitive_attrs):
                 minority_difference, majority_difference =                     image_differences(adv_image_ids, all_images_adversarial, all_adv_preds, sensitive_attr, ds_obj,

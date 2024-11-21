@@ -21,7 +21,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import foolbox
 import getopt
-sys.path.insert(0, "../util")
+sys.path.insert(0, "util")
 
 
 import model
@@ -30,23 +30,20 @@ import model
 ## Load other helper functions and classes
 from pytorch_data_loader import PytorchLoader
 import helper as hp
-from data_loader import UTKFace, Adience, CIFAR10
+from data_loader import UTKFace
 from adversarial import Attack, AttackV2
 
 
 DATASET_TO_MODEL_NAMES = {
-    'utkface': ['utk_classifier_regularized', 'resnet_regularized', 'vgg_regularized', 'densenet_regularized'], 
-    'cifar10': ['deep_cnn_regularized', 'resnet_regularized', 'vgg_regularized', 'densenet_regularized']
+    'utkface': ['utk_classifier_regularized', 'resnet_regularized', 'vgg_regularized', 'densenet_regularized']
     }
 
 DATASET_TO_MODEL_TO_TAUS = {
-    'utkface': {'utk_classifier_regularized': [2.0, 5.0], 'densenet_regularized': [2.0], 'resnet_regularized': [2.0], 'vgg_regularized': [2.0]},
-    'cifar10': {'deep_cnn_regularized': [2.0], 'densenet_regularized': [2.0], 'resnet_regularized': [2.0], 'vgg_regularized': [2.0]}
+    'utkface': {'utk_classifier_regularized': [2.0, 5.0], 'densenet_regularized': [2.0], 'resnet_regularized': [2.0], 'vgg_regularized': [2.0]}
 }
 
 DATASET_TO_MODEL_TO_ALPHAS = {
-    'utkface': {'utk_classifier_regularized': [0.1, 1.0, 2.0, 10.0], 'densenet_regularized': [0.1, 1.0], 'resnet_regularized': [0.1, 1.0], 'vgg_regularized': [0.1, 1.0]},
-    'cifar10': {'deep_cnn_regularized': [0.1, 1.0], 'densenet_regularized': [0.1, 1.0], 'resnet_regularized': [0.1, 1.0], 'vgg_regularized': [0.1, 1.0]}
+    'utkface': {'utk_classifier_regularized': [0.1, 1.0, 2.0, 10.0], 'densenet_regularized': [0.1, 1.0], 'resnet_regularized': [0.1, 1.0], 'vgg_regularized': [0.1, 1.0]}
 }
 
 DATASET_TO_MODEL_TO_BETAS = {

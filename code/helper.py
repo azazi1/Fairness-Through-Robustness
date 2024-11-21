@@ -15,28 +15,15 @@ import seaborn as sns
 from sklearn.metrics import accuracy_score
 from matplotlib import pyplot as plt
 
-sys.path.insert(0, '../util')
+#sys.path.insert(0, 'util')
 
 from pytorch_data_loader import PytorchLoader
-from data_loader import UTKFace, UTKFace_C, Adience, Adience_C, CIFAR10, CIFAR10_C, \
-    CIFAR100, CIFAR100_C, CIFAR100super, CIFAR100super_C
+from data_loader import UTKFace #, UTKFace_C
 
 
-# In[ ]:
-
-
-DATASET_TO_OBJECT_MAPPING = {'cifar10': CIFAR10,
-                             'utkface': UTKFace,
-                             'adience': Adience,
-                             'cifar100': CIFAR100,
-                             'cifar100super': CIFAR100super}
-DATASET_TO_MODEL_NAMES = {'cifar10': ['deep_cnn', 'mlp1_cifar', 'conv2_cifar',
-                                      'resnet','alexnet',
-                                      'vgg','squeezenet','densenet'], 
-                          'utkface': ['utk_classifier', 'resnet','alexnet',
-                                      'vgg','squeezenet','densenet'], 
-                          'adience': ['adience_classifier', 'resnet','alexnet',
-                                      'vgg','squeezenet','densenet']} 
+DATASET_TO_OBJECT_MAPPING = {'utkface': UTKFace}
+DATASET_TO_MODEL_NAMES = {'utkface': ['utk_classifier', 'resnet','alexnet',
+                                      'vgg','squeezenet','densenet']}
 #                           'adience': ['vgg16', 'vgg19']}
 
 COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
@@ -193,7 +180,7 @@ def line_plots(lines, x_vals, x_label, y_label, filename, title, subfolder='none
 # In[ ]:
 
 def line_plots_grid(all_lines, all_x_vals, x_label, y_label, filename, titles, global_title, 
-    subfolder, y_lims=(0,1), columns=2):
+    subfolder, y_lims=(0,1), columns=2, paper_friendly_plot=False):
     """
     Plot multiple subplots, each of which will be a line plot
     """

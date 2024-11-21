@@ -18,7 +18,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import foolbox
 import getopt
-sys.path.insert(0, "../util")
+sys.path.insert(0, "util")
 
 
 import model
@@ -27,7 +27,7 @@ import model
 ## Load other helper functions and classes
 from pytorch_data_loader import PytorchLoader
 import helper as hp
-from data_loader import UTKFace, Adience, CIFAR10
+from data_loader import UTKFace
 from adversarial import Attack, AttackV2
 
 

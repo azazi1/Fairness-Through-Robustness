@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# ## This is for regularized loss, integrate into the main file soon
-
-# In[1]:
+# This is for regularized loss, integrate into the main file soon
 
 
 import torchvision
@@ -22,16 +17,15 @@ import itertools
 import numpy as np
 import foolbox
 import getopt
-sys.path.insert(0, "../util")
+sys.path.insert(0, "util")
 
 
 import model
 
-
-## Load other helper functions and classes
+# Load other helper functions and classes
 from pytorch_data_loader import PytorchLoader
 import helper as hp
-from data_loader import UTKFace, Adience, CIFAR10
+from data_loader import UTKFace
 from adversarial import Attack, AttackV2
 
 # In[4]:
@@ -77,7 +71,7 @@ def main(dataset, gpu, epochs, model_names, with_regularization=False, taus=None
                     train_regularization, train_minority_dist, train_majority_dist,
                         test_acc_history, test_overall_loss_history, test_cross_entropy, 
                             test_regularization, test_minority_dist, test_majority_dist) = \
-                                model.train_model(model_to_train, epochs, device, data_loaders, 
+                                model.train_model(model_to_train, epochs, device, ds_obj.name, data_loaders,
                                     criterion_kwargs)
                 print ((train_acc_history, train_overall_loss_history, train_cross_entropy, 
                     train_regularization, train_minority_dist, train_majority_dist,

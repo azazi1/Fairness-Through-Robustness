@@ -5,26 +5,17 @@
 
 # In[1]:
 
-import torchvision
-import torchvision.models as models
-import torchvision.transforms as transforms
 import torch
-import torch.nn as nn
-import torch.optim as optim
 
-import sys, os
-import time
-import operator
-import itertools
+import os
 import numpy as np
 import pickle
+from data_loader import plot_image
 
 import foolbox
 print (foolbox.__version__)
 from foolbox.criteria import Misclassification
-from functools import partial
 import torch.multiprocessing as multiprocessing
-
 import helper as hp
 
 # In[2]:
@@ -212,9 +203,9 @@ class Attack:
                 d[k] = v
             args.append(d)
         with multiprocessing.Pool(processes=num_slices) as pool:
-            all_tups = starmap_with_kwargs(pool, self.attack, args)
+            all_tups = hp.starmap_with_kwargs(pool, self.attack, args)
 #             all_tups = pool.starmap(partial(self.attack(**kwargs)), args)
-        return concatenate_tup_entries(all_tups)
+        return hp.concatenate_tup_entries(all_tups)
     
     def subsample(self, image_ids, inputs, labels, protected_class, fraction):
         subsampled_indices = list(range(int(len(image_ids) * fraction)))
@@ -451,9 +442,9 @@ class AttackV2:
                 d[k] = v
             args.append(d)
         with multiprocessing.Pool(processes=num_slices) as pool:
-            all_tups = starmap_with_kwargs(pool, self.attack, args)
+            all_tups = hp.starmap_with_kwargs(pool, self.attack, args)
 #             all_tups = pool.starmap(partial(self.attack(**kwargs)), args)
-        return concatenate_tup_entries(all_tups)
+        return hp.concatenate_tup_entries(all_tups)
     
     def subsample(self, image_ids, inputs, labels, protected_class, fraction):
         subsampled_indices = list(range(int(len(image_ids) * fraction)))

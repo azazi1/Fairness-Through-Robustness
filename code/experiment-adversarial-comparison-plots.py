@@ -18,7 +18,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import foolbox
 import getopt
-sys.path.insert(0, "../util")
+sys.path.insert(0, "util")
 
 
 import model
@@ -27,7 +27,7 @@ import model
 ## Load other helper functions and classes
 from pytorch_data_loader import PytorchLoader
 import helper as hp
-from data_loader import UTKFace, Adience, CIFAR10
+from data_loader import UTKFace
 from adversarial import Attack, AttackV2
 
 
@@ -89,15 +89,10 @@ def main(dataset_reg, dataset_original, gpu, model_name_reg, model_name_original
             print (adv_folder)
             print (len(glob.glob("{}/*_epoch_{}*".format(adv_folder, epoch))))
 
-            if 'cifar' in ds_obj_original.name.lower():
-                sensitive_attrs_name = ds_obj_reg.name.split('_')[-1].lower() # get the sens attr name from reg model
-                sensitive_attr = np.array([1 if ds_obj_original.classes[ds_obj_original.test_labels[int(img_id)]] == sensitive_attrs_name \
-                    else 0 for img_id in adv_image_ids])
-            else:
-                attr = ds_obj_original.name.lower().split('_')[-1]
-                sensitive_attrs_name = 'Black' if attr == 'race' else 'Female'
-                sensitive_attr = np.array([ds_obj_original.get_image_protected_class('test', int(img_id), attr=attr) \
-                                        for img_id in adv_image_ids])
+            attr = ds_obj_original.name.lower().split('_')[-1]
+            sensitive_attrs_name = 'Black' if attr == 'race' else 'Female'
+            sensitive_attr = np.array([ds_obj_original.get_image_protected_class('test', int(img_id), attr=attr) \
+                                    for img_id in adv_image_ids])
                 
             minority_difference, majority_difference = image_differences(adv_image_ids, all_images_adversarial, sensitive_attr, ds_obj_original)
             frac_greater_than_tau_majority = np.array([np.sum(majority_difference > t) / len(majority_difference) for t in taus])

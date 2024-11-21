@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# ## Inherits from pytorch Dataset class; used to iterate over data
-
-# In[ ]:
+# Inherits from pytorch Dataset class; used to iterate over data
 
 import torch
 
@@ -13,7 +8,7 @@ class PytorchLoader(torch.utils.data.Dataset):
         """
         This is a custom implementation to load the Adience Dataset
         
-        ds: is an instance of Dataloader defined in `../util/data_loader.ipynb`
+        ds: is an instance of Dataloader defined in `data_loader.py`
         portion: train or test
         do_analysis: if True, will save some data analysis to a file (TODO: To be Implemented!)
         """
@@ -28,14 +23,9 @@ class PytorchLoader(torch.utils.data.Dataset):
         """
         image = self.ds.get_image(self.portion, index)
         class_label = int(self.ds.get_image_label(self.portion, index))
-        if 'adience' in self.ds.name.lower():
-            protected_class = int(self.ds.get_image_protected_class(self.portion, index))
-        elif 'utkface' in self.ds.name.lower():
+        if 'utkface' in self.ds.name.lower():
             attr = self.ds.name.lower().split('_')[-1]
             protected_class = int(self.ds.get_image_protected_class(self.portion, index, attr=attr))
-        elif 'cifar10_' in self.ds.name.lower():
-            # this takes care of both the downsampled class dataset and the regularized training dataset
-            protected_class = 1 if self.ds.classes[class_label].lower() in self.ds.name.lower() else 0
         elif 'linear' in self.ds.name.lower():
             protected_class = int(self.ds.get_image_protected_class(self.portion, index))
         else:

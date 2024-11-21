@@ -17,13 +17,13 @@ import numpy as np
 # Load the Pytorch Dataset class which will be used to iterate over data
 
 from pytorch_data_loader import PytorchLoader
-from custom_models import DeepCNN, UTKClassifier, AdienceClassifier
+from custom_models import UTKClassifier, MLP1
 from regularized_loss import RegularizedLoss
 import helper as hp
 
 
 # In[1]:
-
+PHASES = ['train', 'test']
 
 def set_parameter_requires_grad(model, num_unfrozen=None):
     """
@@ -151,13 +151,6 @@ class DNN:
             num_ftrs = model_ft.classifier[6].in_features
             self.input_size = 224
             model_ft.classifier[6] = nn.Linear(num_ftrs, self.num_classes)
-        elif 'adience_classifier' in self.model_name.lower():
-            """
-            Adience classifier taken from:
-            https://talhassner.github.io/home/projects/cnn_agegender/CVPR2015_CNN_AgeGenderEstimation.pdf
-            """
-            model_ft = AdienceClassifier(self.num_classes)
-            set_parameter_requires_grad(model_ft)
         elif 'utk_classifier' in self.model_name.lower():
             """
             UTKFace classifier taken (mostly) from Kaggle: 
@@ -165,23 +158,8 @@ class DNN:
             """
             model_ft = UTKClassifier(self.num_classes)
             set_parameter_requires_grad(model_ft)
-        elif "deep_cnn" in self.model_name.lower():
-            """
-            Custom model defined for CIFAR-10 dataset
-            """
-            model_ft = DeepCNN(self.num_classes)
-            set_parameter_requires_grad(model_ft)
-        elif "mlp1_cifar" in self.model_name.lower():
-            model_ft = MLP1(3072,self.num_classes)
-            set_parameter_requires_grad(model_ft)
-        elif "mlp1_adience" in self.model_name.lower():
-            model_ft = MLP1(150528,self.num_classes)
-            set_parameter_requires_grad(model_ft)
         elif "mlp1_utk" in self.model_name.lower():
             model_ft = MLP1(120000,self.num_classes)
-            set_parameter_requires_grad(model_ft)
-        elif "conv2_cifar" in self.model_name.lower():
-            model_ft = Conv2_CIFAR(self.num_classes)
             set_parameter_requires_grad(model_ft)
         else:
             # feature_extract = False #finetune the whole network when False
@@ -198,7 +176,7 @@ class DNN:
 # In[ ]:
 
 
-def train_model(model, num_epochs, device, data_loaders, criterion_kwargs={}, checkpoint=None):
+def train_model(model, num_epochs, device, ds_name, data_loaders, criterion_kwargs={}, checkpoint=None):
     
     """
     For model training.
@@ -215,8 +193,8 @@ def train_model(model, num_epochs, device, data_loaders, criterion_kwargs={}, ch
     
     if checkpoint is not None:
         print ('Resuming training from {} epoch!'.format(checkpoint))
-        filename = '{}_epoch_{}_lr_{}.pth'.format(model.model_name, checkpoint, learning_rate)
-        model.model_ft.load_state_dict(torch.load('../{}/model_weights/{}'.format(ds_obj.name, filename),
+        filename = '{}_epoch_{}_lr_{}.pth'.format(model.model_name, checkpoint, model.learning_rate)
+        model.model_ft.load_state_dict(torch.load('../{}/model_weights/{}'.format(ds_name, filename),
                                                  map_location=device))
     model.model_ft.train()
     # we need model to be in train mode regardless since regularized loss requires calculation of gradients
